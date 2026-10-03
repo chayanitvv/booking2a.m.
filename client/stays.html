@@ -1,3 +1,35 @@
 <!doctype html>
-<html lang="th"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Sunset Journey | จองที่พัก</title><link rel="stylesheet" href="styles.css" /></head>
-<body class="listing-page"><header class="site-header service-header"><a class="brand" href="menu.html"><span>✦</span> sunset journey</a><a class="back-menu" href="menu.html">← กลับสู่เมนู</a></header><main class="listing-main"><p class="eyebrow">STAYS</p><h1>ค้นหาที่พัก<br /><em>ที่เหมาะกับคุณ</em></h1><form class="listing-search" id="catalog-search"><label>จังหวัดหรือจุดหมายปลายทาง<input id="location" placeholder="เช่น เชียงใหม่, ภูเก็ต" autocomplete="off" /></label><label>วันเข้าพัก<input type="date" /></label><button class="primary" type="submit">ค้นหาที่พัก <span>→</span></button></form><p id="catalog-summary" class="catalog-summary"></p><section id="catalog-results" class="catalog-results" aria-live="polite"></section></main><div id="detail-modal" class="detail-modal hidden" role="dialog" aria-modal="true"><div class="detail-card"><button class="detail-close" type="button" aria-label="ปิด">×</button><div id="detail-content"></div></div></div><script src="catalog.js"></script></body></html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunset Journey | จองที่พัก</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="listing-page">
+  <header class="site-header service-header">
+    <a class="brand" href="menu.html"><span>✦</span> sunset journey</a>
+    <a class="back-menu" href="menu.html">← กลับสู่เมนู</a>
+  </header>
+  <main class="listing-main">
+    <p class="eyebrow">STAYS</p>
+    <h1>ค้นหาที่พัก<br /><em>ที่เหมาะกับคุณ</em></h1>
+    <form class="listing-search" id="catalog-search">
+      <label>จังหวัดหรือจุดหมายปลายทาง<input id="location" placeholder="เช่น เชียงใหม่, ภูเก็ต" autocomplete="off" /></label>
+      <label>วันเข้าพัก<input id="start-date" type="date" required /></label>
+      <label>วันออกจากที่พัก<input id="end-date" type="date" required /></label>
+      <button class="primary" type="submit">ค้นหาที่พัก <span>→</span></button>
+    </form>
+    <p id="catalog-summary" class="catalog-summary"></p>
+    <section id="catalog-results" class="catalog-results" aria-live="polite"></section>
+  </main>
+  <div id="detail-modal" class="detail-modal hidden" role="dialog" aria-modal="true">
+    <div class="detail-card">
+      <button class="detail-close" type="button" aria-label="ปิด">×</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+  <script src="catalog.js"></script>
+  <script src="catalog-dates.js"></script>
+</body>
+</html>

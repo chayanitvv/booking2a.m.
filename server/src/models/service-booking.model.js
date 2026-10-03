@@ -12,6 +12,12 @@ const serviceBookingSchema = new mongoose.Schema({
   serviceName: { type: String, required: true },
   location: { type: String, required: true },
   serviceDetails: [{ type: String }],
+  bookingDates: {
+    checkIn: Date,
+    checkOut: Date,
+    pickupDate: Date,
+    returnDate: Date
+  },
   totalAmount: { type: Number, required: true, min: 0 },
   paymentMethod: { type: String, required: true },
   paymentStatus: { type: String, enum: ['paid', 'pending'], default: 'paid' },

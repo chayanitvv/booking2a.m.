@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = Number(process.env.PORT) || 5173;
+const API_PORT = Number(process.env.API_PORT) || 5000;
 const clientRoot = path.resolve(__dirname);
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -17,6 +18,30 @@ const contentTypes = {
 const server = http.createServer((req, res) => {
   try {
     const urlPath = new URL(req.url, `http://${req.headers.host}`).pathname;
+
+    if (urlPath === '/api' || urlPath.startsWith('/api/')) {
+      const apiRequest = http.request({
+        hostname: '127.0.0.1',
+        port: API_PORT,
+        path: req.url,
+        method: req.method,
+        headers: { ...req.headers, host: `127.0.0.1:${API_PORT}` },
+      }, (apiResponse) => {
+        res.writeHead(apiResponse.statusCode || 502, apiResponse.headers);
+        apiResponse.pipe(res);
+      });
+
+      apiRequest.on('error', () => {
+        if (!res.headersSent) {
+          res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+        }
+        res.end(JSON.stringify({ message: `Backend API is unavailable on port ${API_PORT}` }));
+      });
+
+      req.pipe(apiRequest);
+      return;
+    }
+
     const requestedFile = urlPath === '/' ? 'index.html' : decodeURIComponent(urlPath).replace(/^[/\\]+/, '');
     const filePath = path.resolve(clientRoot, requestedFile);
 

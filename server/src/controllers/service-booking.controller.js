@@ -1,12 +1,31 @@
 const ServiceBooking = require('../models/service-booking.model');
 
 const createReference = () => `SJ${Date.now().toString().slice(-8)}${Math.floor(Math.random() * 90 + 10)}`;
+const isValidDateRange = (start, end) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  return !Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime()) && endDate > startDate;
+};
 
 const createServiceBooking = async (req, res, next) => {
   try {
     const { item, paymentMethod } = req.body;
     if (!item?.kind || !item?.name || !item?.place || !Number.isFinite(item.price) || !paymentMethod) {
       return res.status(400).json({ message: 'Booking and payment details are required' });
+    }
+    let bookingDates;
+    if (item.kind === 'stay') {
+      const { checkIn, checkOut } = item.bookingDates || {};
+      if (!isValidDateRange(checkIn, checkOut)) {
+        return res.status(400).json({ message: 'Check-out date must be after check-in date' });
+      }
+      bookingDates = { checkIn: new Date(checkIn), checkOut: new Date(checkOut) };
+    } else if (item.kind === 'car') {
+      const { pickupDate, returnDate } = item.bookingDates || {};
+      if (!isValidDateRange(pickupDate, returnDate)) {
+        return res.status(400).json({ message: 'Return date must be after pickup date' });
+      }
+      bookingDates = { pickupDate: new Date(pickupDate), returnDate: new Date(returnDate) };
     }
     const booking = await ServiceBooking.create({
       reference: createReference(),
@@ -15,6 +34,7 @@ const createServiceBooking = async (req, res, next) => {
       serviceName: item.name,
       location: item.place,
       serviceDetails: item.details || [],
+      bookingDates,
       totalAmount: item.price,
       paymentMethod,
       paymentStatus: paymentMethod === 'ชำระที่เคาน์เตอร์' ? 'pending' : 'paid',
